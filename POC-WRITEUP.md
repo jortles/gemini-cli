@@ -89,31 +89,31 @@ permissions:
   statuses: write
 ```
 
-An attacker's preinstall hook can call:
-```
-POST /repos/google-gemini/gemini-cli/statuses/{sha}
-Authorization: token $GITHUB_TOKEN
-{"state": "success", "context": "E2E (Chained)"}
-```
+GITHUB_TOKEN is available to all steps. An attacker's code can call the
+GitHub Statuses API to set commit statuses. However, the `set_workflow_status`
+job runs with `if: always()` and overwrites the status with the real E2E
+result after all jobs complete — so a premature "success" status set during
+preinstall would be overwritten within minutes.
 
-This marks any commit — including the attacker's PR — as passing CI.
-If branch protection requires the "E2E (Chained)" check, this bypasses it.
+The GITHUB_TOKEN's primary value to an attacker is as a credential for
+authenticated GitHub API access (read repo contents, list workflows,
+enumerate secrets metadata) rather than persistent status manipulation.
 
 ### GEMINI_API_KEY
 
 Available during the test step. An attacker can:
-- Use Google's API key for unlimited Gemini API access
+- Use Google's API key for Gemini API access (charged to Google's account)
 - Enumerate accessible models and projects
 - Exfiltrate the key for persistent access after the run
 
 ### Combined Attack
 
 1. Open innocent-looking PR (typo fix, doc update)
-2. Payload in preinstall: exfiltrate GITHUB_TOKEN, set status to "success"
-3. Payload in test code: exfiltrate GEMINI_API_KEY
-4. CI passes (attacker's code made it pass)
-5. Reviewer sees green CI → more likely to merge
-6. If merged: attacker code ships to 100K+ gemini-cli users
+2. Payload in preinstall hook or build script: exfiltrate GITHUB_TOKEN
+3. Payload in test code (runs with API key in env): exfiltrate GEMINI_API_KEY
+4. Tests pass naturally (payload doesn't interfere with test execution)
+5. Attacker has both tokens before any human reviews the PR
+6. GEMINI_API_KEY provides persistent Gemini API access beyond the CI run
 
 ## Timeline
 

