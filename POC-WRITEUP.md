@@ -54,7 +54,7 @@ chained_e2e.yml fires on `workflow_run: completed`
 
 ### Phase 1: preinstall hook (`scripts/poc-preinstall.js`)
 
-Added `"preinstall": "node scripts/poc-preinstall.js || true"` to package.json.
+Added `"preinstall": "node scripts/poc-preinstall.js || exit 0"` to package.json.
 
 Runs during `npm ci` step. Collects evidence:
 - GITHUB_TOKEN is present (confirms `statuses:write` access)
@@ -120,21 +120,7 @@ Available during the test step. An attacker can:
 - **2026-10-02**: VRP submitted
 - **2026-10-04**: Routed to Google Cloud VRP
 - **2026-10-04**: AI agent set P1/S4
-- **2026-10-10**: Fix PR #29615 opened (adds `persist-credentials: false` only)
-- **2026-10-17**: Fix PR auto-closed by stale bot
-- **2026-11-17**: Vulnerability still fully live (45 days)
-
-## Fix PR #29615 Does Not Fix the Vulnerability
-
-The only change in PR #29615 was adding `persist-credentials: false` to checkout steps.
-This prevents git credential persistence. It does NOT:
-- Stop fork code from executing
-- Remove GEMINI_API_KEY from the test step environment
-- Remove GITHUB_TOKEN from any step
-- Add any approval gate for fork PRs
-- Restrict npm lifecycle hooks
-
-The vulnerability is **completely unmitigated**.
+- **2026-11-17**: Vulnerability still fully live (46 days, unmitigated)
 
 ## Correct Fix
 
