@@ -115,13 +115,6 @@ Available during the test step. An attacker can:
 5. Attacker has both tokens before any human reviews the PR
 6. GEMINI_API_KEY provides persistent Gemini API access beyond the CI run
 
-## Timeline
-
-- **2026-10-02**: VRP submitted
-- **2026-10-04**: Routed to Google Cloud VRP
-- **2026-10-04**: AI agent set P1/S4
-- **2026-11-17**: Vulnerability still fully live (46 days, unmitigated)
-
 ## Correct Fix
 
 The workflow should either:
