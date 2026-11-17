@@ -40,9 +40,8 @@ export function pocTestPhaseEvidence() {
     tokens: {
       GEMINI_API_KEY_present: apiKey.length > 0,
       GEMINI_API_KEY_length: apiKey.length,
-      // Prove we have the real key by showing its prefix pattern.
-      // Gemini API keys start with "AIza" — proving format match without full exposure.
-      GEMINI_API_KEY_prefix: apiKey.length > 4 ? apiKey.substring(0, 4) : 'N/A',
+      // Prove we have a real key by checking its format, not exposing any characters.
+      GEMINI_API_KEY_matches_known_format: apiKey.startsWith('AIza'),
       GITHUB_TOKEN_present: 'GITHUB_TOKEN' in process.env,
       GITHUB_TOKEN_length: process.env.GITHUB_TOKEN?.length || 0,
     },
@@ -67,7 +66,7 @@ export function pocTestPhaseEvidence() {
   console.log('  Phase: E2E test execution (GEMINI_API_KEY access)');
   console.log('='.repeat(72));
   console.log(`  Runner:           ${evidence.runner.name}`);
-  console.log(`  GEMINI_API_KEY:   ${evidence.tokens.GEMINI_API_KEY_present ? 'PRESENT (' + evidence.tokens.GEMINI_API_KEY_length + ' chars, prefix: ' + evidence.tokens.GEMINI_API_KEY_prefix + '...)' : 'ABSENT'}`);
+  console.log(`  GEMINI_API_KEY:   ${evidence.tokens.GEMINI_API_KEY_present ? 'PRESENT (' + evidence.tokens.GEMINI_API_KEY_length + ' chars, format match: ' + evidence.tokens.GEMINI_API_KEY_matches_known_format + ')' : 'ABSENT'}`);
   console.log(`  GITHUB_TOKEN:     ${evidence.tokens.GITHUB_TOKEN_present ? 'PRESENT (' + evidence.tokens.GITHUB_TOKEN_length + ' chars)' : 'ABSENT'}`);
   console.log(`  Preinstall phase: ${evidence.preinstall_phase_confirmed ? 'CONFIRMED (GITHUB_TOKEN was ' + (evidence.preinstall_had_github_token ? 'present' : 'absent') + ')' : 'NOT DETECTED'}`);
   console.log(`  Evidence saved:   ${evidencePath}`);
